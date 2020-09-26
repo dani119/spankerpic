@@ -1,10 +1,11 @@
-Intended features:
+Done:
 * Just one hit: run the machine for about one rotation of the motor
+* run continuously: motor on
+* stop: motor off
+Intended features:
 * count the hits: sense on the motor line when a hit is triggered and increase a counter
 ** add LCD and display the counter
 * display spanker machine setting: determine the duration of the spring loading and thus the setting
-* run continuously: motor on
-* stop: motor off
 * run for a pre-set time: motor on, wait for end of pre-set time, motor off
 * run with random delays: random delay, just one hit, repeat
 * hits with a constant frequency: fixed delay, just one hit, repeat
@@ -17,3 +18,8 @@ Implementation plan:
 
 2. One hit
 * one button that lets the machine run for one revolution (one hit)
+
+3. Multiple buttons
+* One button toggles motor on/off continuosly
+* One button lets motor run for just one hit (if it was off)
+

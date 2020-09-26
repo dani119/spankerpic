@@ -13,6 +13,7 @@
 	EXTERN	Interrupt	; interrupt.asm
 	EXTERN	initTaster	; taster.asm
 	EXTERN	waitMilliSeconds; wait.asm
+	EXTERN	waitSeconds	; wait.asm
 	EXTERN	getTasterState	; taster.asm
 ;**************************************************************
 ; Program
@@ -54,16 +55,15 @@ mainLoop
 	btfsc	STATUS,Z	; changed?
 	goto	mainLoop	; Z set: no change, nothing to do
 				; Z clear: state changed
-	andlw	1		; set Z flag from current state in W
-	btfss	STATUS,Z	; skip if state == 0
-	goto	startMotor	; state was one
-stopMotor
-	BANKSEL	MotorPort
-	bcf	MotorPort, MotorPin
-	goto	finish
-startMotor
 	BANKSEL	MotorPort
 	bsf	MotorPort, MotorPin
-finish
+
+	movlw		D'1'
+	call	waitSeconds
+	movlw		D'250'
+	call		waitMilliSeconds
+	
+	BANKSEL	MotorPort
+	bcf	MotorPort, MotorPin
 	goto	mainLoop	; done
 	end
