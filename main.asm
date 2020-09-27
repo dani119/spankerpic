@@ -10,17 +10,16 @@
 ; exported symbol
 	GLOBAL	Init
 ; imported subroutines
-	EXTERN	Interrupt	; interrupt.asm
-	EXTERN	initTaster	; taster.asm
 	EXTERN	waitMilliSeconds; wait.asm
 	EXTERN	waitSeconds	; wait.asm
-	EXTERN	getTasterState	; taster.asm
+	EXTERN	initLCD		; lcd.asm
+	EXTERN	clearLCD	; lcd.asm
+	EXTERN	writeLcdData	; lcd.asm
+	EXTERN	gotoPosition	; lcd.asm
 ;**************************************************************
 ; Program
 resetvector	ORG 0x00
 	goto Init		; jump to main routine
-interruptvector	ORG 0x04
-	goto Interrupt		; dispatch interrupt routine
 
 ;**************************************************************
 ; local definitions
@@ -34,7 +33,7 @@ main_udata		UDATA
 main_code		CODE
 
 Init
-	call	initTaster
+	call		initLCD
 
 	; switch motor off
 	BANKSEL	MotorTRIS
@@ -45,25 +44,29 @@ Init
 	movlw		D'50'	; wait a bit
 	call		waitMilliSeconds
 	
-; init done, start interrupts
-	bsf     INTCON, GIE     ; allow interrupts
-
 mainLoop
-	movlw		D'250'
-	call	waitMilliSeconds
-	call	getTasterState	; current state
-	btfsc	STATUS,Z	; changed?
-	goto	mainLoop	; Z set: no change, nothing to do
-				; Z clear: state changed
+	call		clearLCD
 	BANKSEL	MotorPort
-	bsf	MotorPort, MotorPin
-
-	movlw		D'1'
-	call	waitSeconds
+	bcf		MotorPort, MotorPin
+		
+	movlw		D'250'
+	call		waitMilliSeconds
 	movlw		D'250'
 	call		waitMilliSeconds
 	
+	movlw		' '
+	call		writeLcdData
+	movlw		'O'
+	call		writeLcdData
+	movlw		'K'
+	call		writeLcdData
 	BANKSEL	MotorPort
-	bcf	MotorPort, MotorPin
-	goto	mainLoop	; done
+	bsf		MotorPort, MotorPin
+	
+	movlw		D'250'
+	call		waitMilliSeconds
+	movlw		D'250'
+	call		waitMilliSeconds
+					
+	goto	mainLoop
 	end

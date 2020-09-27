@@ -13,21 +13,32 @@
 ;*     6: Motor on/off
 ;*     7: 
 ;*   PORTB:
-;*     0: INT0 switch
-;*     1: 
-;*     2: 
+;*     0: LCDPinE
+;*     1: LCDPinRW
+;*     2: LCDPinRS
 ;*     3: 
-;*     4: 
-;*     5: 
-;*     6: 
-;*     7: 
+;*     4: LCDPinD0
+;*     5: LCDPinD1
+;*     6: LCDPinD2
+;*     7: LCDPinD3
 
 ;**************************************************************
 ; port definitions
-SwitchPort	EQU	PORTB
-SwitchTRIS	EQU	TRISB
-SwitchPin	EQU	0
+; LCD
+LCDControlPort	EQU	PORTB	; LCD control port
+LCDControlTRIS	EQU	TRISB	; LCD control port control register
+LCDPinE		EQU	0	; PIN LCD enable
+LCDPinRW		EQU	1	; Pin for RW
+LCDPinRS		EQU	2	; Pin for RS
 
-MotorPort	EQU	PORTA
-MotorTRIS	EQU	TRISA
-MotorPin	EQU	6
+LCDDataPort	EQU	PORTB	; LCD data port
+LCDDataTRIS	EQU	TRISB	; LCD data port control register
+LCDPinD0		EQU	4	; Pin for D0/D4
+LCDPinD1		EQU	5	; Pin for D1/D5
+LCDPinD2		EQU	6	; Pin for D2/D6
+LCDPinD3		EQU	7	; Pin for D3/D7
+
+; motor
+MotorPort		EQU	PORTA
+MotorTRIS		EQU	TRISA
+MotorPin		EQU	6
