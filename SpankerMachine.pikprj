@@ -20,4 +20,4 @@ objs-libs-dir=
 other-options=
 
 [Files]
-inputFiles=SpankerMachine.inc, main.asm, wait.asm, lcd.asm
+inputFiles=SpankerMachine.inc, main.asm, wait.asm, lcd.asm, key.asm

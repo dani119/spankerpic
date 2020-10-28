@@ -16,6 +16,8 @@
 	EXTERN	clearLCD	; lcd.asm
 	EXTERN	writeLcdData	; lcd.asm
 	EXTERN	gotoPosition	; lcd.asm
+	EXTERN	initKey		; key.asm
+	EXTERN	getKey		; key.asm
 ;**************************************************************
 ; Program
 resetvector	ORG 0x00
@@ -33,6 +35,7 @@ main_udata		UDATA
 main_code		CODE
 
 Init
+	call		initKey
 	call		initLCD
 
 	; switch motor off
@@ -44,29 +47,22 @@ Init
 	movlw		D'50'	; wait a bit
 	call		waitMilliSeconds
 	
-mainLoop
 	call		clearLCD
-	BANKSEL	MotorPort
-	bcf		MotorPort, MotorPin
-		
-	movlw		D'250'
-	call		waitMilliSeconds
-	movlw		D'250'
-	call		waitMilliSeconds
-	
-	movlw		' '
-	call		writeLcdData
 	movlw		'O'
 	call		writeLcdData
 	movlw		'K'
 	call		writeLcdData
-	BANKSEL	MotorPort
-	bsf		MotorPort, MotorPin
-	
-	movlw		D'250'
-	call		waitMilliSeconds
-	movlw		D'250'
-	call		waitMilliSeconds
+	movlw		':'
+	call		writeLcdData
+	movlw		' '
+	call		writeLcdData
 					
+mainLoop
+	call		getKey			; next key press
+	call		writeLcdData		; copy directly to LCD
+
+	movlw		D'50'	; wait a bit
+	call		waitMilliSeconds
+
 	goto	mainLoop
 	end
