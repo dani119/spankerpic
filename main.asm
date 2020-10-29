@@ -31,6 +31,7 @@ resetvector	ORG 0x00
 ;**************************************************************
 ; local data
 main_udata		UDATA
+command		RES	1
 
 ;**************************************************************
 ; main code segment
@@ -58,8 +59,13 @@ mainLoop
 	movlw		D'50'			; wait a bit
 	call		waitMilliSeconds
 	call		getKey			; next key press
-	call		writeLcdData		; copy directly to LCD
-	call		oneHit			; execute command '*' regardless
+	movwf		command
+	call		writeLcdData		; and display it
+
+	movlw		'*'
+	subwf		command, W		; test for command '*'
+	btfsc		STATUS, Z		; skip call, if not
+	call		oneHit			; execute command '*': run motor once
 
 	goto	mainLoop
 	end
