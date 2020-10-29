@@ -18,6 +18,8 @@
 	EXTERN	gotoPosition	; lcd.asm
 	EXTERN	initKey		; key.asm
 	EXTERN	getKey		; key.asm
+	EXTERN	initMotor	; motor.asm
+	EXTERN	oneHit		; motor.asm
 ;**************************************************************
 ; Program
 resetvector	ORG 0x00
@@ -37,13 +39,8 @@ main_code		CODE
 Init
 	call		initKey
 	call		initLCD
-
-	; switch motor off
-	BANKSEL	MotorTRIS
-	bcf		MotorTRIS, MotorPin
-	BANKSEL	MotorPort
-	bcf		MotorPort, MotorPin
-
+	call		initMotor
+	
 	movlw		D'50'	; wait a bit
 	call		waitMilliSeconds
 	
@@ -58,11 +55,11 @@ Init
 	call		writeLcdData
 					
 mainLoop
+	movlw		D'50'			; wait a bit
+	call		waitMilliSeconds
 	call		getKey			; next key press
 	call		writeLcdData		; copy directly to LCD
-
-	movlw		D'50'	; wait a bit
-	call		waitMilliSeconds
+	call		oneHit			; execute command '*' regardless
 
 	goto	mainLoop
 	end

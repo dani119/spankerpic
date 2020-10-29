@@ -1,23 +1,23 @@
 [General]
 description=Control a spanker machine to allow a more interesting spanking experience
 output=SpankerMachine.hex
-version=0.1
 type=asm
+version=0.1
 
 [Assembler]
+include-dir=$(PRJPATH)
+list=false
+other-options=
+radix=dec
 target-device=p16f628
 warn-level=2
-other-options=
-include-dir=$(PRJPATH)
-radix=dec
-list=false
+
+[Files]
+inputFiles=SpankerMachine.inc, main.asm, wait.asm, lcd.asm, key.asm, motor.asm
 
 [Linker]
-hex-format=inhx32
 debug=false
+hex-format=inhx32
 map=true
 objs-libs-dir=
 other-options=
-
-[Files]
-inputFiles=SpankerMachine.inc, main.asm, wait.asm, lcd.asm, key.asm

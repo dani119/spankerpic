@@ -2,6 +2,9 @@ Done:
 * Just one hit: run the machine for about one rotation of the motor
 * run continuously: motor on
 * stop: motor off
+* added LCD
+* added 4x3 keyboard
+
 Intended features:
 * count the hits: sense on the motor line when a hit is triggered and increase a counter
 ** add LCD and display the counter
@@ -19,7 +22,37 @@ Implementation plan:
 2. One hit
 * one button that lets the machine run for one revolution (one hit)
 
-3. Multiple buttons
-* One button toggles motor on/off continuosly
-* One button lets motor run for just one hit (if it was off)
+#3. Multiple buttons
+#* One button toggles motor on/off continuosly
+#* One button lets motor run for just one hit (if it was off)
+
+========
+Function:
+After initialisation, display menu and wait for a command.
+Commands:
+1: show current settings
+2: reset settings to default values (delay 1s, 20 hits)
+3: store current settings in EEPROM
+4: set delay between hits (2 digit number in 0.1 s)
+5: set random delay mode (maximum delay as 2 digit number in 0.1 s)
+6: set number of hits (2 digit number)
+*: start punishment
+
+When punishment is started, count down from 3 to 0. Then display 
+number of hits to do and begin with first hit.
+After each hit, count down number of hits. If more hits are to come,
+wait for the set (possibly random) delay.
+
+Implementation Plan:
+0. Implement just one hit again: press of '*' runs motor for 1.25 s.
+
+1. Initialise settings with default values
+ Implement command '*': start punishment
+ Execute punishment
+
+2. Implement command 1: show current settings
+
+3. Implement command 6: set number of hits
+
+4. Implement command 4: set delay
 
