@@ -32,6 +32,9 @@ resetvector	ORG 0x00
 ; local data
 main_udata		UDATA
 command		RES	1
+totalHits		RES	1
+delaySeconds		RES	1
+hitsToDo		RES	1
 
 ;**************************************************************
 ; main code segment
@@ -41,31 +44,71 @@ Init
 	call		initKey
 	call		initLCD
 	call		initMotor
+	BANKSEL	command
+	movlw		D'5'
+	movwf		totalHits
+	movlw		D'1'
+	movwf		delaySeconds
 	
 	movlw		D'50'	; wait a bit
 	call		waitMilliSeconds
-	
+
+mainLoop
 	call		clearLCD
-	movlw		'O'
-	call		writeLcdData
-	movlw		'K'
+	movlw		'C'
 	call		writeLcdData
 	movlw		':'
 	call		writeLcdData
 	movlw		' '
 	call		writeLcdData
 					
-mainLoop
 	movlw		D'50'			; wait a bit
 	call		waitMilliSeconds
 	call		getKey			; next key press
+	BANKSEL	command
 	movwf		command
 	call		writeLcdData		; and display it
 
+	BANKSEL	command
 	movlw		'*'
 	subwf		command, W		; test for command '*'
 	btfsc		STATUS, Z		; skip call, if not
-	call		oneHit			; execute command '*': run motor once
+	call		runPunishment	; execute command '*': start the punishment
+	goto		mainLoop
 
-	goto	mainLoop
+runPunishment
+	; display a 3 seconds count down
+	call		clearLCD
+	movlw		'3'
+	call		writeLcdData
+	movlw		D'1'
+	call		waitSeconds
+	call		clearLCD
+	movlw		'2'
+	call		writeLcdData
+	movlw		D'1'
+	call		waitSeconds
+	call		clearLCD
+	movlw		'1'
+	call		writeLcdData
+	movlw		D'1'
+	call		waitSeconds
+	BANKSEL	command
+	movf		totalHits, W
+	movwf		hitsToDo
+nextHit
+	call		clearLCD
+	BANKSEL	command
+	movf		hitsToDo, W
+	addlw		'0'
+	call		writeLcdData
+	BANKSEL	command
+	movf		delaySeconds, W
+	call		waitSeconds
+	call		oneHit
+	BANKSEL	command
+	decfsz		hitsToDo
+	goto		nextHit
+	return
+
 	end
