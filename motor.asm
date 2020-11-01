@@ -4,8 +4,7 @@
         #include <SpankerMachine.inc>
 ;**************************************************************
 ; imported subroutines
-	EXTERN	waitMilliSeconds; wait.asm
-	EXTERN	waitSeconds	; wait.asm
+	EXTERN	waitTenthSeconds; wait.asm
 
 ; exported subroutines
 	GLOBAL	initMotor
@@ -42,12 +41,15 @@ motorOn
 	bsf		MotorPort, MotorPin
 	return
 
+; let the motor run for just one hit
+; one revolution takes about 1.25 s, so we let it run for 1.3 s
+;    (Running a bit longer doesn't matter, the spring will push it back
+;     to its starting position. Running too short will not deliver a hit,
+;     therefore it is better to let it run a bit too long.)
 oneHit
 	call		motorOn
-	movlw		D'1'
-	call		waitSeconds
-	movlw		D'250'
-	call		waitMilliSeconds
+	movlw		D'13'
+	call		waitTenthSeconds
 	call		motorOff
 	return
 

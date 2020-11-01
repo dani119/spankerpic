@@ -7,14 +7,16 @@
 ;	none
 ; exported subroutines
 	GLOBAL	waitMilliSeconds
+	GLOBAL	waitTenthSeconds
 	GLOBAL	waitSeconds
 
 ;**************************************************************
 ; local data
 			UDATA_OVR
-waitSecondsValue	RES 1
-waitMSeconds	RES 1
-waitInner		RES 1
+waitSecondsValue	RES	1
+wait100ms		RES	1
+waitMSeconds	RES	1
+waitInner		RES	1
 
 ;**************************************************************
 ; code
@@ -58,9 +60,23 @@ goOuterLoop	; indirection of this jump inserts 4 cycles
 	nop				; 1002
 	goto	outerLoop		; 1004
 
+; wait for tenth of seconds (100 ms)
+; convenience to close the gap between 255 ms and 1 s waits that
+;    can be done with a single call
+; it is about 0.01% too long 
+waitTenthSeconds			; call: we start with 2
+	BANKSEL	wait100ms	; 4
+	movwf		wait100ms	; 5
+msLoop
+	movlw		D'100'			; 6
+	call		waitMilliSeconds	; 100006
+	decfsz		wait100ms		; 100008
+	goto		msLoop		; 100010
+	return					; 100010
+	
 ; wait for seconds
 ; calculated for 1 MHz internal clock (instructions per second)
-; 1 s is 1000000 instructions, this one is some ppm to long
+; 1 s is 1000000 instructions, this one is some ppm too long
 waitSeconds
 	; no need for cycle counting this time.
 	BANKSEL	waitSecondsValue
