@@ -20,8 +20,9 @@
 	EXTERN	getKey		; key.asm
 	EXTERN	initMotor	; motor.asm
 	EXTERN	oneHit		; motor.asm
-	EXTERN	writeDecimalNumber	; display.asm
-	EXTERN	writeDecimalDigit	; display.asm
+	EXTERN	displayDecimalNumber	; display.asm
+	EXTERN	displayDecimalDigit		; display.asm
+	EXTERN	displayCountDown		; display.asm
 
 ;**************************************************************
 ; Program
@@ -80,22 +81,8 @@ mainLoop
 	goto		mainLoop
 
 runPunishment
-	; display a 3 seconds count down
-	call		clearLCD
-	movlw		'3'
-	call		writeLcdData
-	movlw		D'1'
-	call		waitSeconds
-	call		clearLCD
-	movlw		'2'
-	call		writeLcdData
-	movlw		D'1'
-	call		waitSeconds
-	call		clearLCD
-	movlw		'1'
-	call		writeLcdData
-	movlw		D'1'
-	call		waitSeconds
+	movlw		D'3'
+	call		displayCountDown
 	BANKSEL	command
 	movf		totalHits, W
 	movwf		hitsToDo
@@ -103,7 +90,7 @@ nextHit
 	call		clearLCD
 	BANKSEL	command
 	movf		hitsToDo, W
-	call		writeDecimalNumber
+	call		displayDecimalNumber
 	BANKSEL	command
 	movf		delaySeconds, W
 	call		waitSeconds

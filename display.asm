@@ -5,10 +5,14 @@
 ;**************************************************************
 ; imported subroutines
 	EXTERN	writeLcdData		; lcd.asm
-	
+	EXTERN	clearLCD		; lcd.asm
+	EXTERN 	gotoPosition		; lcd.asm
+	EXTERN	waitSeconds		; wait.asm
+
 ; exported subroutines
-	GLOBAL	writeDecimalNumber
-	GLOBAL	writeDecimalDigit
+	GLOBAL	displayDecimalNumber
+	GLOBAL	displayDecimalDigit
+	GLOBAL	displayCountDown
 
 ; local definitions
 ;myXXX		EQU	B'00000111'
@@ -27,7 +31,7 @@ display_code	CODE
 ; Write a decimal number at the current position, always
 ; uses three characters on the display, left padded with blanks.
 ; e.g. 16 is displayed as ' 16'.
-writeDecimalNumber
+displayDecimalNumber
 	BANKSEL	displayNumber
 	movwf		displayNumber
 	clrf		displayDigit
@@ -65,7 +69,7 @@ doneHundreds
 	movlw		D'100'
 	addwf		displayNumber,F
 	movf		displayDigit,W
-	call		writeDecimalDigit
+	call		displayDecimalDigit
 	clrf		displayDigit
 
 tens
@@ -81,17 +85,41 @@ doneTens
 	movlw		D'10'
 	addwf		displayNumber,F
 	movf		displayDigit,W
-	call		writeDecimalDigit
+	call		displayDecimalDigit
 	clrf		displayDigit
 
 ones
 	movf		displayNumber,W
 
-writeDecimalDigit
+displayDecimalDigit
 ; write one decimal digit in W
 	addlw		'0'
 	call		writeLcdData
 	BANKSEL	displayNumber
+	return
+
+displayCountDown
+	; displays a count down on both lines of the display
+	BANKSEL	displayNumber
+	movwf		displayNumber
+	call		clearLCD
+nextDigit
+	movlw		0x04
+	call		gotoPosition
+	BANKSEL	displayNumber
+	movf		displayNumber, W
+	call		displayDecimalDigit
+	movlw		0x44
+	call		gotoPosition
+	BANKSEL	displayNumber
+	movf		displayNumber, W
+	call		displayDecimalDigit
+	movlw		D'1'
+	call		waitSeconds
+	BANKSEL	displayNumber
+	decfsz		displayNumber, F
+	goto		nextDigit
+
 	return
 
 ; the end
