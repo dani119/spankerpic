@@ -20,6 +20,9 @@
 	EXTERN	getKey		; key.asm
 	EXTERN	initMotor	; motor.asm
 	EXTERN	oneHit		; motor.asm
+	EXTERN	writeDecimalNumber	; display.asm
+	EXTERN	writeDecimalDigit	; display.asm
+
 ;**************************************************************
 ; Program
 resetvector	ORG 0x00
@@ -100,8 +103,7 @@ nextHit
 	call		clearLCD
 	BANKSEL	command
 	movf		hitsToDo, W
-	addlw		'0'
-	call		writeLcdData
+	call		writeDecimalNumber
 	BANKSEL	command
 	movf		delaySeconds, W
 	call		waitSeconds
