@@ -53,3 +53,8 @@ KeyCol3		EQU	7	; Pin for keyboard column 3
 MotorPort		EQU	PORTA
 MotorTRIS		EQU	TRISA
 MotorPin		EQU	6
+
+; global settings
+; main
+DefaultHits		EQU	D'12'
+DefaultDelay		EQU	D'3'

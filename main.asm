@@ -45,9 +45,9 @@ Init
 	call		initLCD
 	call		initMotor
 	BANKSEL	command
-	movlw		D'5'
+	movlw		DefaultHits
 	movwf		totalHits
-	movlw		D'1'
+	movlw		DefaultDelay
 	movwf		delaySeconds
 	
 	movlw		D'50'	; wait a bit
