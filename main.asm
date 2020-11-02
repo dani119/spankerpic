@@ -58,6 +58,13 @@ Init
 	movlw		D'50'	; wait a bit
 	call		waitMilliSeconds
 
+dispatchCommand	macro		key,	routine
+	movlw		key
+	subwf		command, W
+	btfsc		STATUS, Z
+	call		routine
+	endm
+
 mainLoop
 	call		clearLCD
 	movlw		'C'
@@ -71,14 +78,8 @@ mainLoop
 	call		writeLcdData		; and display it
 
 	BANKSEL	command
-	movlw		'*'
-	subwf		command, W		; test for command '*'
-	btfsc		STATUS, Z		; skip call, if not
-	call		runPunishment	; execute command '*': start the punishment
-	movlw		'1'
-	subwf		command, W		; test for command '1'
-	btfsc		STATUS, Z		; skip call, if not
-	call		showValues		; execute command '1': show current values
+	dispatchCommand	'*', runPunishment
+	dispatchCommand	'1', showValues
 	goto		mainLoop
 
 runPunishment
