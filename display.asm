@@ -13,6 +13,7 @@
 	GLOBAL	displayDecimalNumber
 	GLOBAL	displayDecimalDigit
 	GLOBAL	displayCountDown
+	GLOBAL	displayPrompt
 
 ; local definitions
 ;myXXX		EQU	B'00000111'
@@ -122,5 +123,13 @@ nextDigit
 
 	return
 
+displayPrompt
+	call		writeLcdData		; pass W through as prompt char
+	movlw		':'
+	call		writeLcdData
+	movlw		' '
+	call		writeLcdData
+	return
+	
 ; the end
 	END

@@ -23,6 +23,7 @@
 	EXTERN	displayDecimalNumber	; display.asm
 	EXTERN	displayDecimalDigit		; display.asm
 	EXTERN	displayCountDown		; display.asm
+	EXTERN	displayPrompt			; display.asm
 
 ;**************************************************************
 ; Program
@@ -60,11 +61,7 @@ Init
 mainLoop
 	call		clearLCD
 	movlw		'C'
-	call		writeLcdData
-	movlw		':'
-	call		writeLcdData
-	movlw		' '
-	call		writeLcdData
+	call		displayPrompt
 					
 	movlw		D'50'			; wait a bit
 	call		waitMilliSeconds
@@ -107,21 +104,14 @@ nextHit
 showValues
 	call		clearLCD
 	movlw		'H'
-	call		writeLcdData
-	movlw		':'
-	call		writeLcdData
-	movlw		' '
-	call		writeLcdData
+	call		displayPrompt
 	BANKSEL	command
 	movf		totalHits, W
 	call		displayDecimalNumber
 	movlw		0x40
 	call		gotoPosition
 	movlw		'D'
-	call		writeLcdData
-	movlw		':'
-	call		writeLcdData
-	movlw		' '
+	call		displayPrompt
 	BANKSEL	command
 	movf		delaySeconds, W
 	call		displayDecimalNumber
