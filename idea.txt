@@ -10,6 +10,10 @@ Done:
  Implement command '*': start punishment
  Execute punishment
  
+2. Implement command 1: show current settings
+
+
+
 Intended features:
 * count the hits: sense on the motor line when a hit is triggered and increase a counter
 ** add LCD and display the counter

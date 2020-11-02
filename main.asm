@@ -78,6 +78,10 @@ mainLoop
 	subwf		command, W		; test for command '*'
 	btfsc		STATUS, Z		; skip call, if not
 	call		runPunishment	; execute command '*': start the punishment
+	movlw		'1'
+	subwf		command, W		; test for command '1'
+	btfsc		STATUS, Z		; skip call, if not
+	call		showValues		; execute command '1': show current values
 	goto		mainLoop
 
 runPunishment
@@ -100,4 +104,28 @@ nextHit
 	goto		nextHit
 	return
 
-	end
+showValues
+	call		clearLCD
+	movlw		'H'
+	call		writeLcdData
+	movlw		':'
+	call		writeLcdData
+	movlw		' '
+	call		writeLcdData
+	BANKSEL	command
+	movf		totalHits, W
+	call		displayDecimalNumber
+	movlw		0x40
+	call		gotoPosition
+	movlw		'D'
+	call		writeLcdData
+	movlw		':'
+	call		writeLcdData
+	movlw		' '
+	BANKSEL	command
+	movf		delaySeconds, W
+	call		displayDecimalNumber
+	call		getKey			; wait for any key
+	return
+
+END
