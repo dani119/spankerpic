@@ -165,10 +165,9 @@ setTotalHits
 hitsTimes10
 	bcf		STATUS, C		; clear carry
 	rlf		totalHits, F		; numeric value*2
-	movf		totalHits, W
-	movwf		tmpchar
-	rlf		tmpchar, F		; numeric value*4
-	rlf		tmpchar, W		; numeric value*8
+	movf		totalHits, W		; copy to W
+	rlf		totalHits, F		; numeric value*4
+	rlf		totalHits, F		; numeric value*8
 	addwf		totalHits, F		; now totalHits holds value times 10
 	return
 
