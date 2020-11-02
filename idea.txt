@@ -5,12 +5,12 @@ Done:
 * added LCD
 * added 4x3 keyboard
 0. Implement just one hit again: press of '*' runs motor for 1.25 s.
-
 1. Initialise settings with default values
  Implement command '*': start punishment
  Execute punishment
- 
 2. Implement command 1: show current settings
+3. Implement command 4: set number of hits
+==============
 
 Intended features:
 * run for a pre-set time: motor on, wait for end of pre-set time, motor off
@@ -24,7 +24,7 @@ Commands:
 1: show current settings
 2: reset settings to default values (delay 3s, 12 hits)
 3: store current settings in EEPROM
-4: set number of hits (2 digit number)
+4: set number of hits (3 digit number up to 255)
 5: set delay between hits (2 digit number in 0.1 s)
 6: set random delay mode (maximum delay as 2 digit number in 0.1 s)
 *: start punishment
@@ -35,6 +35,4 @@ After each hit, count down number of hits. If more hits are to come,
 wait for the set (possibly random) delay.
 
 Implementation Plan:
-3. Implement command 4: set number of hits
-
 4. Implement command 5: set delay

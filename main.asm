@@ -135,28 +135,41 @@ setTotalHits
 	call		gotoPosition
 	BANKSEL	command
 	clrf		totalHits
-	call		getKey			; next key press
+	call		getKey			; first digit
 	BANKSEL	command
 	movwf		tmpchar
-	call		writeLcdData		; and display it
+	call		writeLcdData		; display first digit
 	BANKSEL	command
 	movlw		'0'
-	subwf		tmpchar, F		; numeric value of first digit now in tmpchar
-	bcf		STATUS, C		; clear carry
-	rlf		tmpchar, F		; numeric value*2
-	movf		tmpchar, W
+	subwf		tmpchar, W		; to numeric value
 	movwf		totalHits
+	call		hitsTimes10
+	call		getKey			; second digit
+	BANKSEL	command
+	movwf		tmpchar
+	call		writeLcdData		; display second digit
+	BANKSEL	command
+	movlw		'0'
+	subwf		tmpchar, W		; to numeric value
+	addwf		totalHits, F
+	call		hitsTimes10
+	call		getKey			; third digit
+	BANKSEL	command
+	movwf		tmpchar
+	movlw		'0'
+	subwf		tmpchar, W		; to numeric value
+	addwf		totalHits, F
+	goto		showValues		; continue with showing current values
+
+; multiplies totalHits with 10
+hitsTimes10
+	bcf		STATUS, C		; clear carry
+	rlf		totalHits, F		; numeric value*2
+	movf		totalHits, W
+	movwf		tmpchar
 	rlf		tmpchar, F		; numeric value*4
 	rlf		tmpchar, W		; numeric value*8
 	addwf		totalHits, F		; now totalHits holds value times 10
-	call		getKey			; next key press
-	BANKSEL	command
-	movwf		tmpchar
-	call		writeLcdData		; and display it
-	BANKSEL	command
-	movlw		'0'
-	subwf		tmpchar, W
-	addwf		totalHits, F
-	goto		showValues		; continue with showing current values
+	return
 
 END
