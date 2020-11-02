@@ -12,28 +12,10 @@ Done:
  
 2. Implement command 1: show current settings
 
-
-
 Intended features:
-* count the hits: sense on the motor line when a hit is triggered and increase a counter
-** add LCD and display the counter
-* display spanker machine setting: determine the duration of the spring loading and thus the setting
 * run for a pre-set time: motor on, wait for end of pre-set time, motor off
 * run with random delays: random delay, just one hit, repeat
 * hits with a constant frequency: fixed delay, just one hit, repeat
-* start up delay
-
-Implementation plan:
-1. Minimal feature
-* one button that toggles motor on/off
-* run on bread board and couple with machine
-
-2. One hit
-* one button that lets the machine run for one revolution (one hit)
-
-#3. Multiple buttons
-#* One button toggles motor on/off continuosly
-#* One button lets motor run for just one hit (if it was off)
 
 ========
 Function:
@@ -42,9 +24,9 @@ Commands:
 1: show current settings
 2: reset settings to default values (delay 3s, 12 hits)
 3: store current settings in EEPROM
-4: set delay between hits (2 digit number in 0.1 s)
-5: set random delay mode (maximum delay as 2 digit number in 0.1 s)
-6: set number of hits (2 digit number)
+4: set number of hits (2 digit number)
+5: set delay between hits (2 digit number in 0.1 s)
+6: set random delay mode (maximum delay as 2 digit number in 0.1 s)
 *: start punishment
 
 When punishment is started, count down from 3 to 0. Then display 
@@ -53,14 +35,6 @@ After each hit, count down number of hits. If more hits are to come,
 wait for the set (possibly random) delay.
 
 Implementation Plan:
-0. Implement just one hit again: press of '*' runs motor for 1.25 s.
+3. Implement command 4: set number of hits
 
-1. Initialise settings with default values
- Implement command '*': start punishment
- Execute punishment
-
-2. Implement command 1: show current settings
-
-3. Implement command 6: set number of hits
-
-4. Implement command 4: set delay
+4. Implement command 5: set delay
