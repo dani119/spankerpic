@@ -10,6 +10,7 @@ Done:
  Execute punishment
 2. Implement command 1: show current settings
 3. Implement command 4: set number of hits
+4. Implement command 5: set delay
 ==============
 
 Intended features:
@@ -25,7 +26,7 @@ Commands:
 2: reset settings to default values (delay 3s, 12 hits)
 3: store current settings in EEPROM
 4: set number of hits (3 digit number up to 255)
-5: set delay between hits (2 digit number in 0.1 s)
+5: set delay between hits (3 digit number in 0.1 s up to 25.5 s)
 6: set random delay mode (maximum delay as 2 digit number in 0.1 s)
 *: start punishment
 
@@ -35,4 +36,6 @@ After each hit, count down number of hits. If more hits are to come,
 wait for the set (possibly random) delay.
 
 Implementation Plan:
-4. Implement command 5: set delay
+5. Implement set random delay mode
+
+6. Implement EEPROM handling (commands reset and store)

@@ -11,7 +11,7 @@
 	GLOBAL	Init
 ; imported subroutines
 	EXTERN	waitMilliSeconds; wait.asm
-	EXTERN	waitSeconds	; wait.asm
+	EXTERN	waitTenthSeconds	; wait.asm
 	EXTERN	initLCD		; lcd.asm
 	EXTERN	clearLCD	; lcd.asm
 	EXTERN	writeLcdData	; lcd.asm
@@ -38,7 +38,7 @@ resetvector	ORG 0x00
 main_udata		UDATA
 command		RES	1
 totalHits		RES	1
-delaySeconds		RES	1
+delayTenths		RES	1
 hitsToDo		RES	1
 tmpchar		RES	1
 
@@ -54,7 +54,7 @@ Init
 	movlw		DefaultHits
 	movwf		totalHits
 	movlw		DefaultDelay
-	movwf		delaySeconds
+	movwf		delayTenths
 	
 	movlw		D'50'	; wait a bit
 	call		waitMilliSeconds
@@ -64,6 +64,16 @@ dispatchCommand	macro		key,	routine
 	subwf		command, W
 	btfsc		STATUS, Z
 	call		routine
+	endm
+
+; multiplies cell with 10
+cellTimes10		macro		cell
+	bcf		STATUS, C		; clear carry
+	rlf		cell, F		; numeric value*2
+	movf		cell, W		; copy to W
+	rlf		cell, F		; numeric value*4
+	rlf		cell, F		; numeric value*8
+	addwf		cell, F		; now the cell holds value times 10
 	endm
 
 mainLoop
@@ -82,6 +92,7 @@ mainLoop
 	dispatchCommand	'*', runPunishment
 	dispatchCommand	'1', showValues
 	dispatchCommand	'4', setTotalHits
+	dispatchCommand	'5', setDelayTenths
 	goto		mainLoop
 
 ; command '*': start punishment
@@ -97,8 +108,8 @@ nextHit
 	movf		hitsToDo, W
 	call		displayDecimalNumber
 	BANKSEL	command
-	movf		delaySeconds, W
-	call		waitSeconds
+	movf		delayTenths, W
+	call		waitTenthSeconds
 	call		oneHit
 	BANKSEL	command
 	decfsz		hitsToDo
@@ -118,7 +129,7 @@ showValues
 	movlw		'D'
 	call		displayPrompt
 	BANKSEL	command
-	movf		delaySeconds, W
+	movf		delayTenths, W
 	call		displayDecimalNumber
 	call		getKey			; wait for any key
 	return
@@ -143,7 +154,7 @@ setTotalHits
 	movlw		'0'
 	subwf		tmpchar, W		; to numeric value
 	movwf		totalHits
-	call		hitsTimes10
+	cellTimes10	totalHits
 	call		getKey			; second digit
 	BANKSEL	command
 	movwf		tmpchar
@@ -152,7 +163,7 @@ setTotalHits
 	movlw		'0'
 	subwf		tmpchar, W		; to numeric value
 	addwf		totalHits, F
-	call		hitsTimes10
+	cellTimes10	totalHits
 	call		getKey			; third digit
 	BANKSEL	command
 	movwf		tmpchar
@@ -161,14 +172,41 @@ setTotalHits
 	addwf		totalHits, F
 	goto		showValues		; continue with showing current values
 
-; multiplies totalHits with 10
-hitsTimes10
-	bcf		STATUS, C		; clear carry
-	rlf		totalHits, F		; numeric value*2
-	movf		totalHits, W		; copy to W
-	rlf		totalHits, F		; numeric value*4
-	rlf		totalHits, F		; numeric value*8
-	addwf		totalHits, F		; now totalHits holds value times 10
-	return
+setDelayTenths
+	call		clearLCD
+	movlw		'D'
+	call		displayPrompt
+	BANKSEL	command
+	movf		delayTenths, W
+	call		displayDecimalNumber
+	movlw		0x03
+	call		gotoPosition
+	BANKSEL	command
+	clrf		delayTenths
+	call		getKey			; first digit
+	BANKSEL	command
+	movwf		tmpchar
+	call		writeLcdData		; display first digit
+	BANKSEL	command
+	movlw		'0'
+	subwf		tmpchar, W		; to numeric value
+	movwf		delayTenths
+	cellTimes10	delayTenths
+	call		getKey			; second digit
+	BANKSEL	command
+	movwf		tmpchar
+	call		writeLcdData		; display second digit
+	BANKSEL	command
+	movlw		'0'
+	subwf		tmpchar, W		; to numeric value
+	addwf		delayTenths, F
+	cellTimes10	delayTenths
+	call		getKey			; third digit
+	BANKSEL	command
+	movwf		tmpchar
+	movlw		'0'
+	subwf		tmpchar, W		; to numeric value
+	addwf		delayTenths, F
+	goto		showValues		; continue with showing current values
 
 END

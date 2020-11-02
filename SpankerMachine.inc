@@ -57,4 +57,4 @@ MotorPin		EQU	6
 ; global settings
 ; main
 DefaultHits		EQU	D'12'
-DefaultDelay		EQU	D'3'
+DefaultDelay		EQU	D'30'
