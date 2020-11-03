@@ -120,7 +120,8 @@ nextHit
 	goto		fixedDelay
 	call		next3Bit
 	BANKSEL	command
-	movwf		tmpchar	; store random number between 0 and 7
+	movwf		tmpchar	; random number is between 0 and 7
+	incf		tmpchar, F	; 1 to 8
 	clrw				; sum up in W
 multiplyRandom
 	addwf		delayTenths, W
@@ -132,7 +133,16 @@ multiplyRandom
 	bcf		STATUS, C
 	rrf		tmpchar, F	; divide by two
 	bcf		STATUS, C
-	rrf		tmpchar, W	; divide by two, into W: (1 to 8) 8ths of the delay
+	rrf		tmpchar, F	; divide by two, should be now between 0.125 and 1.0 times fixed delay
+	; debugging output of random delay time
+	movlw		0x40
+	call		gotoPosition
+	BANKSEL	command
+	movf		tmpchar, W
+	call		displayDecimalNumber
+	BANKSEL	command
+	; end debugging output
+	movf		tmpchar, W
 	goto		continueDelay
 fixedDelay
 	movf		delayTenths, W
