@@ -14,6 +14,14 @@
 
 ;**************************************************************
 ; local definitions
+;	the time it takes for one revolution depends on the power
+;	setting of the spanker machine. I've measured from 1.2 to 1.5 seconds.
+;	But running a bit longer doesn't matter, the spring will push it back
+;	to its starting position. Running too short will not deliver a hit,
+;	therefore it is better to let it run a bit too long.
+;	In power settings below 4 this doesn't work any more, as it
+;	will from time to time deliver two hits instead of one.
+MotorRevolutionTime	EQU	D'15'
 
 ;**************************************************************
 ; local data
@@ -42,13 +50,9 @@ motorOn
 	return
 
 ; let the motor run for just one hit
-; one revolution takes about 1.25 s, so we let it run for 1.3 s
-;    (Running a bit longer doesn't matter, the spring will push it back
-;     to its starting position. Running too short will not deliver a hit,
-;     therefore it is better to let it run a bit too long.)
 oneHit
 	call		motorOn
-	movlw		D'13'
+	movlw		MotorRevolutionTime
 	call		waitTenthSeconds
 	call		motorOff
 	return
