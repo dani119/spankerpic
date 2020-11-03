@@ -13,7 +13,7 @@ target-device=p16f628
 warn-level=2
 
 [Files]
-inputFiles=SpankerMachine.inc, main.asm, wait.asm, lcd.asm, key.asm, motor.asm, display.asm
+inputFiles=SpankerMachine.inc, main.asm, wait.asm, lcd.asm, key.asm, motor.asm, display.asm, random.asm
 
 [Linker]
 debug=false

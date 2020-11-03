@@ -58,3 +58,4 @@ MotorPin		EQU	6
 ; main
 DefaultHits		EQU	D'12'
 DefaultDelay		EQU	D'30'
+DefaultRandomDelay EQU	1
