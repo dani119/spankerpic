@@ -131,9 +131,8 @@ multiplyRandom
 	bcf		STATUS, C
 	rrf		tmpchar, F	; divide by two
 	bcf		STATUS, C
-	rrf		tmpchar, F	; divide by two
-	bcf		STATUS, C
-	rrf		tmpchar, F	; divide by two, should be now between 0.125 and 1.0 times fixed delay
+	rrf		tmpchar, F	; divided by four should now be between 0.25 and 2.0 times of
+					; the fixed delay. This way the expectation value stays roughly the same.
 	; debugging output of random delay time
 	movlw		0x40
 	call		gotoPosition
